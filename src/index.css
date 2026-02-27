@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 48% 4%;
+    --foreground: 225 60% 97%;
+    --card: 222 40% 8%;
+    --card-foreground: 225 60% 97%;
+    --popover: 222 40% 8%;
+    --popover-foreground: 225 60% 97%;
+    --primary: 186 100% 59%;
+    --primary-foreground: 222 48% 4%;
+    --secondary: 222 30% 14%;
+    --secondary-foreground: 225 60% 97%;
+    --muted: 222 30% 16%;
+    --muted-foreground: 222 20% 75%;
+    --accent: 186 100% 59%;
+    --accent-foreground: 222 48% 4%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 222 20% 22%;
+    --input: 222 20% 22%;
+    --ring: 186 100% 59%;
+    --radius: 0.875rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: #FFFFFF;
+  }
+}
+
+@layer components {
+  .font-mono-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2EE9FF;
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, #FFFFFF 0%, #2EE9FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 30px rgba(46, 233, 255, 0.35);
+  }
+  
+  .border-glow:hover {
+    border-color: rgba(46, 233, 255, 0.5);
+  }
+  
+  .grid-overlay {
+    background-image: 
+      linear-gradient(rgba(244, 247, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(244, 247, 255, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  
+  .vignette {
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(7, 10, 18, 0.4) 100%);
+  }
+  
+  .noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.03;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+  
+  .pinned-section {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .frame-line {
+    position: absolute;
+    background: rgba(244, 247, 255, 0.25);
+  }
+  
+  .frame-line-h {
+    height: 1px;
+  }
+  
+  .frame-line-v {
+    width: 1px;
+  }
+  
+  .text-primary-bright {
+    color: #FFFFFF;
+  }
+  
+  .text-secondary-bright {
+    color: #B8C0D4;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Smooth scrolling for Lenis (if used) */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070A12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(46, 233, 255, 0.4);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 233, 255, 0.6);
+}
