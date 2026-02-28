@@ -1,4 +1,5 @@
 import { useEffect, useRef, useLayoutEffect } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
@@ -9,9 +10,29 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
+import Servicii from '@/pages/Servicii';
+import MisiuneaSociala from '@/pages/MisiuneaSociala';
 import './App.css';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Scroll to top on route change; if hash is #contact, scroll to contact form instead
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash === '#contact') {
+      const scrollToContactForm = () => {
+        const el = document.getElementById('contact');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else window.scrollTo(0, 0);
+      };
+      requestAnimationFrame(() => requestAnimationFrame(scrollToContactForm));
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+  return null;
+}
 
 // Navigation Component
 function Navigation() {
@@ -52,8 +73,17 @@ function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            <button onClick={() => scrollToSection('servicii')} className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
+            <Link to="/" className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
+              Acasă
+            </Link>
+            <Link to="/servicii" className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
               Servicii
+            </Link>
+            <Link to="/misiunea-sociala" className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
+              Misiunea socială
+            </Link>
+            <button onClick={() => scrollToSection('despre-noi')} className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
+              Despre Noi
             </button>
             <button onClick={() => scrollToSection('produse')} className="text-[#B8C0D4] hover:text-[#2EE9FF] transition-colors text-sm font-medium">
               Produse
@@ -84,8 +114,17 @@ function Navigation() {
         isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
         <div className="flex flex-col items-center justify-center h-full gap-8">
-          <button onClick={() => scrollToSection('servicii')} className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors">
+          <Link to="/" className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors" onClick={() => setIsOpen(false)}>
+            Acasă
+          </Link>
+          <Link to="/servicii" className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors" onClick={() => setIsOpen(false)}>
             Servicii
+          </Link>
+          <Link to="/misiunea-sociala" className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors" onClick={() => setIsOpen(false)}>
+            Misiunea socială
+          </Link>
+          <button onClick={() => scrollToSection('despre-noi')} className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors">
+            Despre Noi
           </button>
           <button onClick={() => scrollToSection('produse')} className="text-2xl font-display font-semibold text-white hover:text-[#2EE9FF] transition-colors">
             Produse
@@ -366,6 +405,137 @@ function ServicesSection() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Despre Noi Section
+function DespreNoiSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.despre-intro',
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: '.despre-intro',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+      gsap.fromTo('.obiective-card',
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: '.obiective-grid',
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
+  const scrollToContact = () => {
+    const element = document.getElementById('contact');
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section
+      ref={sectionRef}
+      id="despre-noi"
+      className="relative bg-[#070A12] overflow-hidden"
+    >
+      {/* Intro block - purple hero */}
+      <div className="relative py-24 lg:py-32 px-6 lg:px-12 bg-gradient-to-b from-[#7B1FA2]/90 via-[#6A1B9A] to-[#4A148C]">
+        <div className="absolute inset-0 bg-[url('/hero_screen.jpg')] bg-cover bg-center opacity-20 mix-blend-overlay" aria-hidden />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#6A1B9A]/80 to-[#4A148C]/90" aria-hidden />
+        <div className="despre-intro relative z-10 max-w-3xl mx-auto text-center">
+          <h2 className="font-display font-bold text-4xl lg:text-5xl text-white mb-6">
+            Despre noi
+          </h2>
+          <p className="text-white/95 text-lg leading-relaxed mb-10">
+            Proiectul de întreprindere socială LEDVISION Systems SRL a luat naștere printr-o finanțare obținută prin <strong>FONDUL SOCIAL EUROPEAN</strong>.
+          </p>
+          <Button
+            onClick={scrollToContact}
+            className="bg-white text-[#6A1B9A] hover:bg-white/90 font-semibold px-8 py-6 rounded-xl transition-colors"
+          >
+            Get In Touch
+          </Button>
+        </div>
+      </div>
+
+      {/* Obiectivele noastre */}
+      <div className="relative py-24 lg:py-32 px-6 lg:px-12">
+        <div className="absolute inset-0 pointer-events-none opacity-30" style={{
+          backgroundImage: 'linear-gradient(rgba(46, 233, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(46, 233, 255, 0.03) 1px, transparent 1px)',
+          backgroundSize: '60px 60px'
+        }} />
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="mb-16">
+            <span className="font-mono text-xs tracking-[0.12em] uppercase text-[#2EE9FF] mb-4 block">OBIECTIVE</span>
+            <h2 className="font-display font-bold text-display-2 text-white">
+              Obiectivele noastre
+            </h2>
+          </div>
+
+          <div className="obiective-grid grid md:grid-cols-2 gap-8">
+            {/* Card 1 */}
+            <div className="obiective-card bg-white/[0.06] border border-white/20 rounded-2xl p-8 lg:p-10 hover:border-[#2EE9FF]/40 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-[#2EE9FF] flex items-center justify-center text-[#070A12] font-display font-bold text-xl mb-6">
+                1
+              </div>
+              <h3 className="font-display font-semibold text-xl text-white mb-4">
+                Oferirea de servicii închiriere LED de calitate
+              </h3>
+              <p className="text-[#B8C0D4] text-sm font-medium mb-3">
+                Întreprinderea oferă servicii complete de:
+              </p>
+              <ul className="text-[#C8D0E0] text-sm space-y-2 mb-6 list-disc list-inside">
+                <li>Închiriere de panouri LED profesionale P3.91, cu toate accesoriile incluse;</li>
+                <li>Transport, montaj, instalare și operare tehnică la fața locului;</li>
+                <li>Asistență tehnică pe durata evenimentului;</li>
+                <li>Configurare personalizată în funcție de tipul evenimentului și locație.</li>
+              </ul>
+              <p className="text-[#B8C0D4] text-sm leading-relaxed mb-4">
+                Serviciile se adresează atât clienților instituționali (B2B) — primării, ONG-uri, firme — cât și clienților individuali (B2C) — persoane care organizează evenimente personale.
+              </p>
+              <p className="text-[#C8D0E0] text-sm leading-relaxed">
+                Prin acest model de servicii „la cheie”, firma asigură nu doar eficiență operațională, ci și accesibilitate în zonele rurale, unde astfel de servicii sunt rare sau inexistente.
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="obiective-card bg-white/[0.06] border border-white/20 rounded-2xl p-8 lg:p-10 hover:border-[#2EE9FF]/40 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-[#2EE9FF] flex items-center justify-center text-[#070A12] font-display font-bold text-xl mb-6">
+                2
+              </div>
+              <h3 className="font-display font-semibold text-xl text-white mb-4">
+                Îndeplinirea misiunii sociale
+              </h3>
+              <p className="text-[#C8D0E0] text-sm leading-relaxed">
+                Întreprinderea socială se adresează copiilor și tinerilor cu tulburări din spectrul autist (TSA), în special celor din mediul rural din județul Iași și regiunea de nord-est a României. Intervențiile propuse prin această inițiativă urmăresc sprijinirea copiilor diagnosticați cu tulburări din spectrul autist (TSA), cu un accent special pe cei din mediul rural, acolo unde accesul la servicii de terapie și sprijin este extrem de limitat. Ne adresăm în principal familiilor cu venituri reduse, care nu dispun de resursele financiare necesare pentru a asigura terapiile esențiale de care acești copii au nevoie încă din primii ani de viață.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -682,46 +852,39 @@ function Footer() {
   );
 }
 
-// Main App
-function App() {
+// Home page – snap scroll lives here so it unmounts when we go to Servicii (normal scroll there)
+function HomePage() {
   useEffect(() => {
-    // Simple entrance animation
     gsap.fromTo('.hero-content',
       { x: -30, opacity: 0 },
       { x: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.2 }
     );
-
     gsap.fromTo('.hero-image-container',
       { x: 30, opacity: 0 },
       { x: 0, opacity: 1, duration: 0.8, ease: 'power2.out', delay: 0.3 }
     );
 
-    // Global snap for pinned sections
     const setupSnap = () => {
       const pinned = ScrollTrigger.getAll()
         .filter(st => st.vars.pin)
         .sort((a, b) => a.start - b.start);
-      
       const maxScroll = ScrollTrigger.maxScroll(window);
       if (!maxScroll || pinned.length === 0) return;
-
       const pinnedRanges = pinned.map(st => ({
         start: st.start / maxScroll,
         end: (st.end ?? st.start) / maxScroll,
         center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
       }));
-
       ScrollTrigger.create({
         snap: {
           snapTo: (value: number) => {
             const inPinned = pinnedRanges.some(r => value >= r.start - 0.02 && value <= r.end + 0.02);
             if (!inPinned) return value;
-
-            const target = pinnedRanges.reduce((closest, r) =>
-              Math.abs(r.center - value) < Math.abs(closest - value) ? r.center : closest,
+            return pinnedRanges.reduce(
+              (closest, r) =>
+                Math.abs(r.center - value) < Math.abs(closest - value) ? r.center : closest,
               pinnedRanges[0]?.center ?? 0
             );
-            return target;
           },
           duration: { min: 0.15, max: 0.35 },
           delay: 0,
@@ -729,9 +892,7 @@ function App() {
         }
       });
     };
-
     const snapTimeout = setTimeout(setupSnap, 500);
-
     return () => {
       clearTimeout(snapTimeout);
       ScrollTrigger.getAll().forEach(st => st.kill());
@@ -740,9 +901,7 @@ function App() {
 
   const scrollToContact = () => {
     const element = document.getElementById('contact');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -861,12 +1020,26 @@ function App() {
 
       {/* Flowing Sections */}
       <div style={{ position: 'relative', zIndex: 70 }}>
+        <DespreNoiSection />
         <ServicesSection />
         <ProductsSection />
         <ContactSection />
         <Footer />
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/servicii" element={<Servicii />} />
+        <Route path="/misiunea-sociala" element={<MisiuneaSociala />} />
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </>
   );
 }
 
